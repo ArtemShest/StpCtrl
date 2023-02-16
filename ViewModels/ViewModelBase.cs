@@ -4,6 +4,8 @@ using StpCtrl.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace StpCtrl.ViewModels
 {
@@ -75,6 +77,27 @@ namespace StpCtrl.ViewModels
         {
             log += str+"\n";
         }
+
+        async public Task stepper_tick()
+        {
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    Device device = selectedDevice;
+                    if (device.command == null)
+                    device.check_curPosition();
+                    else
+                    {
+                        device.sendCommand(device.command, device.cmdAxis, device.cmdData);
+                        device.command = null; device.cmdAxis = null; device.cmdData = null;
+                    }
+                    Thread.Sleep(50);
+                }
+            });
+        }
+        
+        
 
         
         #endregion

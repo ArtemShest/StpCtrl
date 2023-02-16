@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Reactive;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Collections;
 using ReactiveUI;
 
 namespace StpCtrl.Models
@@ -12,12 +15,14 @@ namespace StpCtrl.Models
     public class Device : ReactiveObject
     {
         #region values
-        private int? _id;
         private string? _ip;
         private string? _mac;
         private string? _name;
-        private Stepper _axisA;
-        private Stepper _axisB;
+        private byte? _command;
+        private byte? _cmdAxis;
+        private List<byte>? _cmdData;
+
+        private AvaloniaList<Stepper> _axis;
         #endregion
 
         #region properties
@@ -33,71 +38,172 @@ namespace StpCtrl.Models
             set => this.RaiseAndSetIfChanged(ref _name, value); 
         }
 
-        public Stepper axisA
+        public byte? command
         {
-            get => _axisA;
-            set => this.RaiseAndSetIfChanged(ref _axisA, value);
+            get => _command;
+            set => this.RaiseAndSetIfChanged(ref _command, value);
         }
-        public Stepper axisB
+        public byte? cmdAxis
         {
-            get => _axisB;
-            set => this.RaiseAndSetIfChanged(ref _axisB, value);
+            get => _cmdAxis;
+            set => this.RaiseAndSetIfChanged(ref _cmdAxis, value);
         }
+        public List<byte>? cmdData
+        {
+            get => _cmdData;
+            set => this.RaiseAndSetIfChanged(ref _cmdData, value);
+        }
+        public AvaloniaList<Stepper> axis
+        {
+            get => _axis;
+            set => this.RaiseAndSetIfChanged(ref _axis, value);
+        }
+
+
 
         #endregion
 
         public Device(string name)
         {
             this.name = name;
-            axisA = new Stepper();
-            axisB = new Stepper();
+            cmdData = new();
+            axis = new()
+            {
+                new Stepper("axis A"),
+                new Stepper("axis B")
+            };
 
+            moveForward = ReactiveCommand.Create<Stepper>(_moveForward);
+            stop = ReactiveCommand.Create<Stepper>(_stop);
+            moveBackward = ReactiveCommand.Create<Stepper>(_moveBackward);
+            setPositionZero = ReactiveCommand.Create<Stepper>(_setPositionZero);
+            moveToZero = ReactiveCommand.Create<Stepper>(_moveToZero);
+            moveTo = ReactiveCommand.Create<Stepper>(_moveTo);
+            shiftOn = ReactiveCommand.Create<Stepper>(_shiftOn);
         }
+
+        #region commands
+        public ReactiveCommand<Stepper, Unit> moveForward { get; }
+        public ReactiveCommand<Stepper, Unit> stop { get; }
+        public ReactiveCommand<Stepper, Unit> moveBackward { get; }
+        public ReactiveCommand<Stepper, Unit> setPositionZero { get; }
+        public ReactiveCommand<Stepper, Unit> moveToZero { get; }
+        public ReactiveCommand<Stepper, Unit> moveTo { get; }
+        public ReactiveCommand<Stepper, Unit> shiftOn { get; }
+        #endregion
 
         #region methods
-        public void axisA_MoveForward()
+        public void _moveForward(Stepper step)
         {
-            sendCommand(2, 1);
+            cmdAxis = (byte)axis.IndexOf(step);
+            command = 2;
         }
-        public void axisA_MoveBackward()
+        public void _stop(Stepper step)
         {
-            sendCommand(3, 1);
+            cmdAxis = (byte)axis.IndexOf(step);
+            command = 1; 
         }
-        public void axisA_Stop()
+        public void _moveBackward(Stepper step)
         {
-            sendCommand(1, 1);
+            cmdAxis = (byte)axis.IndexOf(step);
+            command = 3;
+        }
+        public void _setPositionZero(Stepper step)
+        {
+            cmdAxis = (byte)axis.IndexOf(step);
+            command = 5;
+        }
+        public void _moveToZero(Stepper step)
+        {
+            cmdAxis = (byte)axis.IndexOf(step);
+            command = 6; 
+        }
+        public void _moveTo(Stepper step)
+        {
+
+            cmdData = intToListByte(step.target);
+            cmdAxis = (byte)axis.IndexOf(step);
+            command = 7;
+        }
+        public void _shiftOn(Stepper step)
+        {
+
+            cmdData = intToListByte(step.shift);
+            cmdAxis = (byte)axis.IndexOf(step);
+            command = 8; 
         }
 
-
-        public void axisB_MoveForward()
+        public List<byte> intToListByte(int data)
         {
-            sendCommand(2, 2);
-        }
-        public void axisB_MoveBackward()
-        {
-            sendCommand(3, 2);
-        }
-        public void axisB_Stop()
-        {
-            sendCommand(1, 2);
-        }
-
-        public void sendCommand(byte cmd, byte axis)
-        {
-            try
+            List<byte> list = new List<byte>();
+            for (int i = 3; i >= 0; i--)
             {
-                TcpClient tcpClient = new TcpClient();
-                tcpClient.Connect("192.168.1.7", 10);
-                NetworkStream stream = tcpClient.GetStream();
-                //byte[] byte_ip = new byte[4];
-                //string[] str_ip = ip.Split(new char[] { '.' });
-                //for (int i = 0; i < 4; i++) byte_ip[i] = Convert.ToByte(str_ip[i]);
+                list.Add((byte)(data >> (8 * i)));
+            }
+            return list;
+        }
 
-                byte[] requestData = { 0, 0, 0, 0, cmd, axis, 0, 0, 0, 0 };
-                stream.Write(requestData);
-                tcpClient.Close();
-            }//
-            catch { }
+        public void check_curPosition()
+        {
+            sendCommand(9, 1, null);
+        }
+
+        async public void sendCommand(byte? __cmd, byte? __axis, List<byte>? data)
+        {
+            while (__cmd == null) ;
+            if (true)
+            {
+                byte _axis = (byte)__axis; byte _cmd = (byte)__cmd;
+                TcpClient tcpClient = new TcpClient();
+                try
+                {
+                    //Thread.Sleep(1000);
+                    byte[] requestData = { 0, 0, 0, 0, _cmd, _axis, 0, 0, 0, 0 };
+                    if (data != null)
+                        for (int i = 0; i < 4; i++)
+                        {
+                            requestData[i + 6] = data[i];
+                        }
+
+                    List<byte> msg = new();
+//                    await tcpClient.ConnectAsync("192.168.1.15", 10);
+                    tcpClient.Connect("192.168.1.15", 10);
+                    NetworkStream stream = tcpClient.GetStream();
+                    await stream.WriteAsync(requestData);
+                    int count = 0;
+                    while (!stream.DataAvailable)
+                    {
+                        if (count >= 50) break;
+                        count++;
+                        Thread.Sleep(10);
+                    }
+                    while (stream.DataAvailable)
+                    {
+                        msg.Add(Convert.ToByte(stream.ReadByte()));
+                    }
+
+                    /*
+                    do 
+                    { 
+                        msg.Add(Convert.ToByte(stream.ReadByte())); 
+                    }
+                    while (stream.DataAvailable);
+                    */
+                    int curPositionA = msg[0];
+                    for (int i = 1; i < 4; i++) { curPositionA = (curPositionA << 8) + msg[i]; }
+                    int curPositionB = msg[4];
+                    axis[0].curPosition = curPositionA;
+                    
+                    for (int i = 4; i < 8; i++) { curPositionB = (curPositionB << 8) + msg[i]; }
+                    axis[1].curPosition = curPositionB;
+                    tcpClient.Close();
+                }//
+                catch 
+                {
+                    if (tcpClient.Connected) tcpClient.Close();
+                }
+            }
+            
         }
         #endregion
 

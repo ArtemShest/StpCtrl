@@ -1,7 +1,10 @@
 C:\Users\artem\.nuget\packages\avalonia\11.0.0-preview4\lib\net6.0\Avalonia.Base.dll
+C:\Users\artem\.nuget\packages\avalonia.controls.colorpicker\11.0.0-preview4\lib\net6.0\Avalonia.Controls.ColorPicker.dll
+C:\Users\artem\.nuget\packages\avalonia.controls.datagrid\11.0.0-preview4\lib\net6.0\Avalonia.Controls.DataGrid.dll
 C:\Users\artem\.nuget\packages\avalonia\11.0.0-preview4\lib\net6.0\Avalonia.Controls.dll
 C:\Users\artem\.nuget\packages\avalonia\11.0.0-preview4\lib\net6.0\Avalonia.DesignerSupport.dll
 C:\Users\artem\.nuget\packages\avalonia.desktop\11.0.0-preview4\lib\net6.0\Avalonia.Desktop.dll
+C:\Users\artem\.nuget\packages\avalonia.diagnostics\11.0.0-preview4\lib\net6.0\Avalonia.Diagnostics.dll
 C:\Users\artem\.nuget\packages\avalonia\11.0.0-preview4\lib\net6.0\Avalonia.Dialogs.dll
 C:\Users\artem\.nuget\packages\avalonia\11.0.0-preview4\lib\net6.0\Avalonia.dll
 C:\Users\artem\.nuget\packages\avalonia.freedesktop\11.0.0-preview4\lib\net6.0\Avalonia.FreeDesktop.dll
@@ -14,6 +17,7 @@ C:\Users\artem\.nuget\packages\avalonia.reactiveui\11.0.0-preview4\lib\net6.0\Av
 C:\Users\artem\.nuget\packages\avalonia.remote.protocol\11.0.0-preview4\lib\net6.0\Avalonia.Remote.Protocol.dll
 C:\Users\artem\.nuget\packages\avalonia.skia\11.0.0-preview4\lib\net6.0\Avalonia.Skia.dll
 C:\Users\artem\.nuget\packages\avalonia.themes.fluent\11.0.0-preview4\lib\net6.0\Avalonia.Themes.Fluent.dll
+C:\Users\artem\.nuget\packages\avalonia.themes.simple\11.0.0-preview4\lib\net6.0\Avalonia.Themes.Simple.dll
 C:\Users\artem\.nuget\packages\avalonia.win32\11.0.0-preview4\lib\net6.0\Avalonia.Win32.dll
 C:\Users\artem\.nuget\packages\avalonia.x11\11.0.0-preview4\lib\net6.0\Avalonia.X11.dll
 C:\Users\artem\.nuget\packages\dynamicdata\7.9.5\lib\net6.0\DynamicData.dll
@@ -22,6 +26,10 @@ C:\Users\artem\.nuget\packages\jetbrains.annotations\10.3.0\lib\netstandard1.0\J
 C:\Users\artem\.nuget\packages\material.icons.avalonia\1.2.0\lib\netstandard2.0\Material.Icons.Avalonia.dll
 C:\Users\artem\.nuget\packages\material.icons\1.1.10\lib\netstandard2.0\Material.Icons.dll
 C:\Users\artem\.nuget\packages\microcom.runtime\0.11.0\lib\net5.0\MicroCom.Runtime.dll
+C:\Users\artem\.nuget\packages\microsoft.codeanalysis.csharp\3.8.0\lib\netcoreapp3.1\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\artem\.nuget\packages\microsoft.codeanalysis.csharp.scripting\3.8.0\lib\netcoreapp3.1\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+C:\Users\artem\.nuget\packages\microsoft.codeanalysis.common\3.8.0\lib\netcoreapp3.1\Microsoft.CodeAnalysis.dll
+C:\Users\artem\.nuget\packages\microsoft.codeanalysis.scripting.common\3.8.0\lib\netcoreapp3.1\Microsoft.CodeAnalysis.Scripting.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\6.0.11\ref\net6.0\Microsoft.CSharp.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\6.0.11\ref\net6.0\Microsoft.VisualBasic.Core.dll
 C:\Program Files\dotnet\packs\Microsoft.NETCore.App.Ref\6.0.11\ref\net6.0\Microsoft.VisualBasic.dll
