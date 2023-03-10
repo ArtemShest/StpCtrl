@@ -1,4 +1,0 @@
-C:\Users\artem\source\repos\excel\StpCtrl\StpCtrl\bin\Release\net6.0\publish\win-x64\StpCtrl.pdb
-C:\Users\artem\source\repos\excel\StpCtrl\StpCtrl\bin\Release\net6.0\publish\win-x64\libHarfBuzzSharp.dll
-C:\Users\artem\source\repos\excel\StpCtrl\StpCtrl\bin\Release\net6.0\publish\win-x64\libSkiaSharp.dll
-C:\Users\artem\source\repos\excel\StpCtrl\StpCtrl\bin\Release\net6.0\publish\win-x64\StpCtrl.exe
