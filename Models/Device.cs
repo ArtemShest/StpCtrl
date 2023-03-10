@@ -80,6 +80,7 @@ namespace StpCtrl.Models
             moveToZero = ReactiveCommand.Create<Stepper>(_moveToZero);
             moveTo = ReactiveCommand.Create<Stepper>(_moveTo);
             shiftOn = ReactiveCommand.Create<Stepper>(_shiftOn);
+            cycle = ReactiveCommand.Create<Stepper>(_cycle);
         }
 
         #region commands
@@ -90,7 +91,10 @@ namespace StpCtrl.Models
         public ReactiveCommand<Stepper, Unit> moveToZero { get; }
         public ReactiveCommand<Stepper, Unit> moveTo { get; }
         public ReactiveCommand<Stepper, Unit> shiftOn { get; }
+        public ReactiveCommand<Stepper, Unit> cycle { get; }
         #endregion
+
+        //circle
 
         #region methods
         public void _moveForward(Stepper step)
@@ -120,8 +124,12 @@ namespace StpCtrl.Models
         }
         public void _moveTo(Stepper step)
         {
-
             cmdData = intToListByte(step.target);
+            if (step.unitMeasureMoveTo == "steps")
+                cmdData.Insert(0, 1);
+            else if (step.unitMeasureMoveTo == "mkm")
+                cmdData.Insert(0, 2);
+
             cmdAxis = (byte)axis.IndexOf(step);
             command = 7;
         }
@@ -129,13 +137,35 @@ namespace StpCtrl.Models
         {
 
             cmdData = intToListByte(step.shift);
+            //cmdData = intToListByte(step.target);
+            if (step.unitMeasureShiftOn == "steps")
+                cmdData.Insert(0, 1);
+            else if (step.unitMeasureShiftOn == "mkm")
+                cmdData.Insert(0, 2);
+
             cmdAxis = (byte)axis.IndexOf(step);
             command = 8; 
         }
 
+        public void _cycle(Stepper step)
+        {
+            if (step.commands != null || step.commands.Count != 0)
+            {
+                List<byte> list = new();
+                list.Add((byte)step.commands.Count);
+                foreach (Command cmd in step.commands)
+                {
+                    list.AddRange(intToListByte(cmd.value));
+                }
+                cmdAxis = (byte)axis.IndexOf(step);
+                cmdData = list;
+                command = 4;
+            }
+        }
+
         public List<byte> intToListByte(int data)
         {
-            List<byte> list = new List<byte>();
+            List<byte> list = new();
             for (int i = 3; i >= 0; i--)
             {
                 list.Add((byte)(data >> (8 * i)));
@@ -150,20 +180,29 @@ namespace StpCtrl.Models
 
         async public void sendCommand(byte? __cmd, byte? __axis, List<byte>? data)
         {
-            while (__cmd == null) ;
+            int count1 = 0;
+            while (__cmd == null)
+            {
+                if (count1 >= 20) return;
+                count1++;
+                Thread.Sleep(10);
+            }
             if (true)
             {
                 byte _axis = (byte)__axis; byte _cmd = (byte)__cmd;
+                List<byte> Fdata = new() { 0, 0, 0, 0, _cmd, _axis};
+                if (data != null) Fdata.AddRange(data);
                 TcpClient tcpClient = new TcpClient();
                 try
                 {
                     //Thread.Sleep(1000);
-                    byte[] requestData = { 0, 0, 0, 0, _cmd, _axis, 0, 0, 0, 0 };
-                    if (data != null)
-                        for (int i = 0; i < 4; i++)
-                        {
-                            requestData[i + 6] = data[i];
-                        }
+                    //                    byte[] requestData = { 0, 0, 0, 0, _cmd, _axis, 0, 0, 0, 0 };
+                                        if (_cmd == 8)
+                    {
+
+                    }
+                    byte[] requestData = new byte[Fdata.Count];
+                    Fdata.CopyTo(requestData);
 
                     List<byte> msg = new();
 //                    await tcpClient.ConnectAsync("192.168.1.15", 10);
@@ -182,20 +221,23 @@ namespace StpCtrl.Models
                         msg.Add(Convert.ToByte(stream.ReadByte()));
                     }
 
-                    /*
-                    do 
-                    { 
-                        msg.Add(Convert.ToByte(stream.ReadByte())); 
-                    }
-                    while (stream.DataAvailable);
-                    */
                     int curPositionA = msg[0];
                     for (int i = 1; i < 4; i++) { curPositionA = (curPositionA << 8) + msg[i]; }
-                    int curPositionB = msg[4];
                     axis[0].curPosition = curPositionA;
-                    
+
+                    int curPositionB = msg[4];
                     for (int i = 4; i < 8; i++) { curPositionB = (curPositionB << 8) + msg[i]; }
                     axis[1].curPosition = curPositionB;
+
+                    Int64 curPositionAmm = msg[8];
+                    for (int i = 8; i < 16; i++) { curPositionAmm = (curPositionAmm << 8) + msg[i]; }
+                    axis[0].curPositionMM = curPositionAmm;
+
+                    Int64 curPositionBmm = msg[16];
+                    for (int i = 16; i < 24; i++) { curPositionBmm = (curPositionBmm << 8) + msg[i]; }
+                    axis[1].curPositionMM = curPositionBmm;
+                
+
                     tcpClient.Close();
                 }//
                 catch 

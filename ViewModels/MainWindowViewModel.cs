@@ -13,6 +13,10 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using ReactiveUI;
 using System.Reactive;
+using System.Windows.Input;
+using Avalonia.Collections;
+using System.Reactive.Linq;
+using System.ComponentModel.Design;
 
 namespace StpCtrl.ViewModels
 {
@@ -32,14 +36,27 @@ namespace StpCtrl.ViewModels
             };
             selectedDevice = devices[0];
 
-            openPanelLength = 150;
+            openPanelLength = 120;
 
 //            server.Start(1234);
 
             stepper_tick();
 
+            AvaloniaList<int> CircleCommands = new();
+            CycleDialog = new Interaction<CycleViewModel, Stepper>();
+            CycleCommand = ReactiveCommand.CreateFromTask(async (Stepper stp) =>
+            {
+                var store = new CycleViewModel(stp);
+                var result = await CycleDialog.Handle(store);
+                if (result != null) result.cyclicToolTip = result.ChangeToolTip(result.commands);
+                return stp;
+
+
+            });
         }
 
-        
+        public ICommand CycleCommand { get; set; }
+        public Interaction<CycleViewModel, Stepper> CycleDialog { get; }
+
     }
 }

@@ -60,6 +60,8 @@ namespace StpCtrl.ViewModels
             set => this.RaiseAndSetIfChanged(ref _log, value);
         }
 
+
+
         #endregion
 
         #region methods
@@ -80,13 +82,14 @@ namespace StpCtrl.ViewModels
 
         async public Task stepper_tick()
         {
+            #pragma warning disable CS4014 // “ак как этот вызов не ожидаетс€, выполнение существующего метода продолжаетс€ до тех пор, пока вызов не будет завершен
             Task.Run(() =>
             {
                 while (true)
                 {
                     Device device = selectedDevice;
                     if (device.command == null)
-                    device.check_curPosition();
+                        device.check_curPosition();
                     else
                     {
                         device.sendCommand(device.command, device.cmdAxis, device.cmdData);
@@ -95,6 +98,7 @@ namespace StpCtrl.ViewModels
                     Thread.Sleep(50);
                 }
             });
+            #pragma warning restore CS4014 // “ак как этот вызов не ожидаетс€, выполнение существующего метода продолжаетс€ до тех пор, пока вызов не будет завершен
         }
         
         

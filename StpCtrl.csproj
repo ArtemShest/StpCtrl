@@ -29,4 +29,9 @@
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.4.2" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Views\CycleWindow.axaml.cs">
+      <DependentUpon>CycleWindow.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

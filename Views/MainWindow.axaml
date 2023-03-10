@@ -1,15 +1,16 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:StpCtrl.ViewModels"
+        xmlns:valueConverter="clr-namespace:StpCtrl.Models;assembly=StpCtrl"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:material="using:Material.Icons.Avalonia"
-        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="600"
+        mc:Ignorable="d" d:DesignWidth="650" d:DesignHeight="600"
         x:Class="StpCtrl.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico"
         Title="StpCtrl"
-        Width="1000"
-          MinWidth="700"
+        Width="650"
+          MinWidth="650"
         Height="600"
           MinHeight="600"
         TransparencyLevelHint="AcrylicBlur"
@@ -17,6 +18,7 @@
       
         
         ExtendClientAreaToDecorationsHint="True"  >
+
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
@@ -46,15 +48,9 @@
                 <Setter Property="Background" Value="#525252" />
               </Style>
             </StackPanel.Styles>
-            <Button Background="Transparent" Height="30" Margin="1" Command="{Binding ChangePanelState}">Контроллеры</Button>
-            <Button Background="Transparent" Width="30" Height="30" Command="{Binding ChangeSliderState}" IsVisible="{Binding !sliderState}">
-              <material:MaterialIcon Width="26" Height="26" Kind="Pencil" />
+            <Button Background="Transparent" Height="30" Margin="1" Command="{Binding ChangePanelState}">
+              <Image Source="/Assets/lassard_logo.PNG"/>
             </Button>
-            <Button Width="30" Height="30" Command="{Binding ChangeSliderState}" IsVisible="{Binding sliderState}">
-              <material:MaterialIcon Width="26" Height="26" Kind="Hand" />
-            </Button>
-            <Slider Width="350" IsEnabled="True" Opacity="1" Minimum="140" Maximum="300" Value="{Binding openPanelLength}" IsVisible="{Binding sliderState}" ></Slider>
-
           </StackPanel>
           <SplitView IsPaneOpen="{Binding isPanelOpen}"
                     DisplayMode="CompactInline"
@@ -63,25 +59,21 @@
                     CompactPaneLength="0"
                     Opacity="0.7"
                     >
-            <!--OpenPaneLength="150" -->
-
             <SplitView.Styles>
               <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
                 <Setter Property="Background" Value="#3D3D3D" />
-                <!--<Setter Property="Background" Value="{TemplateBinding Background}" />  -->
               </Style>
               <Style Selector="ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
                 <Setter Property="Background" Value="#474747" />
-                <!--<Setter Property="Background" Value="{TemplateBinding Background}" />-->
               </Style>
             </SplitView.Styles>
             <SplitView.Pane>
               <Grid RowDefinitions="32, *" >
                 <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="2" Margin="1">
-                  <Button  Width="30" Height="30" ToolTip.Tip="Reload finder">
+                  <Button IsEnabled="False" Width="30" Height="30" ToolTip.Tip="Reload finder">
                     <material:MaterialIcon Width="26" Height="26" Kind="Autorenew" />
                   </Button>
-                  <Button  Width="30" Height="30" ToolTip.Tip="Rename device">
+                  <Button IsEnabled="False" Width="30" Height="30" ToolTip.Tip="Rename device">
                     <material:MaterialIcon Width="26" Height="26" Kind="Pencil" />
                   </Button>
 
@@ -108,169 +100,175 @@
                     >
             <SplitView.Pane>
             </SplitView.Pane>
-              <Grid RowDefinitions="0.5*, 0.5*" ColumnDefinitions="*, 150" >
-  
-                <TextBox Width="150" Grid.Row="0" 
-                         Grid.Column="1" Grid.RowSpan="2" 
-                         Text="{Binding $parent[Window].DataContext.server.log}" />
-                <Border Grid.Column="0" Grid.Row="0" Margin="2, 2, 2, 1" BorderThickness="1" BorderBrush="Black">
-                    <SplitView IsPaneOpen="{Binding $parent[Window].DataContext.selectedDevice.axisA.isPanelOpen}"
-                          DisplayMode="CompactInline"
-                          OpenPaneLength="120"
-                          PanePlacement="Right"
-                          CompactPaneLength="0"
-                          Opacity="0.7"  >
-                      <SplitView.Pane>
-                        <StackPanel Spacing="2" Margin="0,2,0,0">
-                          <Button Width="110" HorizontalAlignment="Center"> Go home </Button>
-                          <Button Width="110" HorizontalAlignment="Center"> Zero </Button>
-                          <Button Width="110" HorizontalAlignment="Center"> Cyclic </Button>
-                          <Button Width="110" HorizontalAlignment="Center"> Settings </Button>
-                        </StackPanel>
-                      </SplitView.Pane>
-                      <Panel>
+                <Grid ColumnDefinitions="*" >
+                  <!--  <Grid ColumnDefinitions="*, 150" > -->
+                  <!--    <TextBox Width="150" Grid.Column="1" Text="{Binding $parent[Window].DataContext.server.log}" /> -->
 
-                        <!--Background="AliceBlue" -->
-                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-                          <TextBlock FontSize="32" Text="axis A"/>
-                        </StackPanel>
-                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right">
-                          <Button ToolTip.Tip="Advanced settings" Background="Transparent" Command="{Binding $parent[Window].DataContext.selectedDevice.axisA.ChangePanelState}">
-                            <material:MaterialIcon Kind="CogTransfer" Width="30" Height="30" />
-                          </Button>
-                        </StackPanel>
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" >
-                        <!--Background="Aqua"> -->
-                        <StackPanel.Styles>
-                          <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-                            <Setter Property="Background" Value="#474747" />
-                          </Style>
-                          <Style Selector="Button">
-                            <Setter Property="Background" Value="#3D3D3D" />
-                          </Style>
-                          <Style Selector="Button:click /template/ ContentPresenter#PART_ContentPresenter">
-                            <Setter Property="Background" Value="#525252" />
-                          </Style>
-                        </StackPanel.Styles>
-                        <TextBlock FontSize="38" ToolTip.Tip="Current coordinate" Text="{Binding $parent[Window].DataContext.selectedDevice.axisA.currentCoordinate}" HorizontalAlignment="Center" />
-                        <StackPanel Spacing="10" Orientation="Horizontal">
+                  <ItemsControl Items="{Binding selectedDevice.axis}">
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate>
+                        <Border  Margin="2, 0, 2, 2" BorderThickness="1" BorderBrush="Black">
+                          <SplitView IsPaneOpen="{Binding isPanelOpen}"
+                                DisplayMode="CompactInline"
+                                OpenPaneLength="120"
+                                PanePlacement="Right"
+                                CompactPaneLength="0"
+                                Opacity="0.7"  >
+                            <SplitView.Pane>
+                              <StackPanel Spacing="2" Margin="0,2,0,0">
+                                <StackPanel.Styles>
+                                  <Style Selector="CheckBox:checked /template/ Border#NormalRectangle">
+                                    <Setter Property="BorderBrush" Value="Black" />
+                                    <Setter Property="Background" Value="White" />
+                                    <Setter Property="BorderThickness" Value="2, 2, 2, 2" />
+                                  </Style>
+                                  <Style Selector="CheckBox:checked /template/ Path#CheckGlyph">
+                                    <Setter Property="Fill" Value="Black" />
+                                  </Style>
+                                </StackPanel.Styles>
+                                <Button Width="110" HorizontalAlignment="Center"
+                                        Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.moveToZero}"
+                                        CommandParameter="{Binding .}"> Go home </Button>
+                                <Button Width="110" HorizontalAlignment="Center" 
+                                        Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.setPositionZero}"
+                                        CommandParameter="{Binding .}"> Zero </Button>
+                                <StackPanel Width="110" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="2">
+                                  <Button Width="80"
+                                          Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.cycle}"
+                                          CommandParameter="{Binding .}"
+                                          ToolTip.Tip="{Binding cyclicToolTip}"
+                                          > Cyclic </Button>
+                                  <Button Width="30" Height="30" HorizontalAlignment="Center"
+                                          Command="{Binding  $parent[Window].DataContext.CycleCommand}"
+                                          CommandParameter="{Binding .}"
+                                          >
+                                    <material:MaterialIcon Width="30" Height="30" Kind="Pencil" />
+                                  </Button>
+                                </StackPanel>
+                                <Button IsEnabled="False" Width="110" HorizontalAlignment="Center"> Settings </Button>
+                                <Border Width="110" CornerRadius="3" BorderThickness="2" BorderBrush="Black" Background="DarkGray">
+                                  <Panel Height="30">
+                                    <TextBlock Margin="6, 3, 3, 3" Text="Steps" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <CheckBox  Margin="3, 3, 3, 3" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding isShowSteps}"/>
+                                  </Panel>                                  
+                                </Border>
+                                <Border Width="110" CornerRadius="3" BorderThickness="2" BorderBrush="Black" Background="DarkGray">
+                                  <Panel Height="30">
+                                    <TextBlock Margin="6, 3, 3, 3" Text="Distance" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                    <CheckBox Margin="3, 3, 3, 3" HorizontalAlignment="Right" VerticalAlignment="Center" IsChecked="{Binding isShowCurrentMM}"/>
+                                  </Panel>
+                                </Border>
+                                  
+                              </StackPanel>
+                            </SplitView.Pane>
+                            <Panel>
+                              <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                                <TextBlock FontSize="32" Text="{Binding name, StringFormat='  {0}'}"/>
+                              </StackPanel>
+                              <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right">
+                                <Button ToolTip.Tip="Advanced settings" Background="Transparent" Command="{Binding ChangePanelState}">
+                                  <material:MaterialIcon Kind="CogTransfer" Width="30" Height="30" />
+                                </Button>
+                              </StackPanel>
+                              <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" >
+                                <StackPanel.Styles>
+                                  <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+                                    <Setter Property="Background" Value="#474747" />
+                                  </Style>
+                                  <Style Selector="Button">
+                                    <Setter Property="Background" Value="#3D3D3D" />
+                                  </Style>
+                                  <Style Selector="Button:click /template/ ContentPresenter#PART_ContentPresenter">
+                                    <Setter Property="Background" Value="#525252" />
+                                  </Style>
+                                </StackPanel.Styles>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" IsVisible="{Binding isShowSteps}">
+                                  <TextBlock FontSize="38" ToolTip.Tip="Current coordinate" Text="{Binding curPosition}" HorizontalAlignment="Center" />
+                                  <TextBlock  FontSize="38" Text=" steps"/>
+                                </StackPanel>
+                                  <Grid ColumnDefinitions="*, *, *" IsVisible="{Binding isShowCurrentMM}">
+                                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                                      <TextBlock FontSize="32" ToolTip.Tip="Current coordinate" Text="{Binding curPositionMM, Converter={valueConverter:PositionMMConverter}, Mode=OneWay, ConverterParameter=mm}" HorizontalAlignment="Center" />
+                                      <TextBlock VerticalAlignment="Bottom" FontSize="18" Text=" mm "/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                      <TextBlock FontSize="32" ToolTip.Tip="Current coordinate" Text="{Binding curPositionMM, Converter={valueConverter:PositionMMConverter}, Mode=OneWay, ConverterParameter=mkm}" HorizontalAlignment="Center" />
+                                      <TextBlock VerticalAlignment="Bottom" FontSize="18" Text=" mkm "/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                                      <TextBlock FontSize="32" ToolTip.Tip="Current coordinate" Text="{Binding curPositionMM, Converter={valueConverter:PositionMMConverter}, Mode=OneWay, ConverterParameter=nm}" HorizontalAlignment="Center" />
+                                      <TextBlock VerticalAlignment="Bottom" FontSize="18" Text=" nm "/>
+                                    </StackPanel>
+                                  </Grid>
+                                <StackPanel Spacing="10" Orientation="Horizontal">
 
-                          <Button Width="60" Height="40">
-                            <material:MaterialIcon Width="40" Height="40" Kind="SkipPrevious" />
-                          </Button>
+                                  <Button IsEnabled="False" Width="60" Height="40">
+                                    <material:MaterialIcon Width="40" Height="40" Kind="SkipPrevious" />
+                                  </Button>
 
-                          <LayoutTransformControl>
-                            <LayoutTransformControl.LayoutTransform>
-                              <RotateTransform Angle="180"/>
-                            </LayoutTransformControl.LayoutTransform>
-                            <Button Width="60" Height="40" Command="{Binding $parent[Window].DataContext.selectedDevice.axisA_MoveBackward}">
-                              <material:MaterialIcon Width="40" Height="40"  Kind="Play"  />
-                            </Button>
-                          </LayoutTransformControl>
+                                  <LayoutTransformControl>
+                                    <LayoutTransformControl.LayoutTransform>
+                                      <RotateTransform Angle="180"/>
+                                    </LayoutTransformControl.LayoutTransform>
+                                    <Button  Width="60" Height="40" 
+                                            Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.moveBackward}" 
+                                            CommandParameter="{Binding .}">
+                                      <material:MaterialIcon Width="40" Height="40"  Kind="Play"  />
+                                    </Button>
+                                  </LayoutTransformControl>
 
-                          <Button Width="60" Height="40" Command="{Binding $parent[Window].DataContext.selectedDevice.axisA_Stop}">
-                            <material:MaterialIcon Width="40" Height="40" Kind="Pause" />
-                          </Button>
+                                  <Button Width="60" Height="40" 
+                                          Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.stop}" 
+                                          CommandParameter="{Binding .}">
+                                    <material:MaterialIcon Width="40" Height="40" Kind="Pause" />
+                                  </Button>
 
-                          <Button Width="60" Height="40" Command="{Binding $parent[Window].DataContext.selectedDevice.axisA_MoveForward}">
-                            <material:MaterialIcon Width="40" Height="40" Kind="Play" />
-                          </Button>
+                                  <Button Width="60" Height="40" 
+                                          Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.moveForward}" 
+                                          CommandParameter="{Binding .}">
+                                    <material:MaterialIcon Width="40" Height="40" Kind="Play" />
+                                  </Button>
 
-                          <Button Width="60" Height="40">
-                            <material:MaterialIcon Width="40" Height="40" Kind="SkipNext" />
-                          </Button>
-                        </StackPanel>
-                        <Panel Margin="0,5, 0, 5">
-                          <Button HorizontalAlignment="Left" FontSize="26" Content="Move to" ></Button>
-                          <NumericUpDown HorizontalAlignment="Right" Increment="1" FontSize="24" Value="0" ></NumericUpDown>
-                        </Panel>
-                        <Panel Margin="0,0, 0, 5">
-                          <Button HorizontalAlignment="Left" FontSize="26" Content="Shift on" ></Button>
-                          <NumericUpDown HorizontalAlignment="Right" Increment="1" FontSize="24" Value="0" ></NumericUpDown>
-                        </Panel>
-                      </StackPanel>
-                    
-                    </Panel>
-                  </SplitView>
-                </Border>
-                <Border Grid.Column="0" Margin="2, 1, 2, 2" Grid.Row="1" BorderThickness="1" BorderBrush="Black">
-                  <SplitView IsPaneOpen="{Binding $parent[Window].DataContext.selectedDevice.axisB.isPanelOpen}"
-                                  DisplayMode="CompactInline"
-                                  OpenPaneLength="120"
-                                  PanePlacement="Right"
-                                  CompactPaneLength="0"
-                                  Opacity="0.7"  >
-                    <SplitView.Pane>
-                      <StackPanel Spacing="2" Margin="0,2,0,0">
-                        <Button Width="110" HorizontalAlignment="Center"> Go home </Button>
-                        <Button Width="110" HorizontalAlignment="Center"> Zero </Button>
-                        <Button Width="110" HorizontalAlignment="Center"> Cyclic </Button>
-                        <Button Width="110" HorizontalAlignment="Center"> Settings </Button>
-                      </StackPanel>
-                    </SplitView.Pane>
-                    <Panel  >
-                      <!--Background="AntiqueWhite"-->
-                      <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-                        <TextBlock FontSize="32" Text="axis B"/>
-                      </StackPanel>
-                      <StackPanel VerticalAlignment="Top" HorizontalAlignment="Right">
-                        <Button ToolTip.Tip="Advanced settings" Background="Transparent" Command="{Binding $parent[Window].DataContext.selectedDevice.axisB.ChangePanelState}">
-                          <material:MaterialIcon Kind="CogTransfer" Width="30" Height="30" />
-                        </Button>
-                      </StackPanel>
-                      <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Vertical" >
-                        <!--Background="Aqua"> -->
-                        <StackPanel.Styles>
-                          <Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-                            <Setter Property="Background" Value="#474747" />
-                          </Style>
-                          <Style Selector="Button">
-                            <Setter Property="Background" Value="#3D3D3D" />
-                          </Style>
-                          <Style Selector="Button:click /template/ ContentPresenter#PART_ContentPresenter">
-                            <Setter Property="Background" Value="#525252" />
-                          </Style>
-                        </StackPanel.Styles>
-                        <TextBlock FontSize="38" ToolTip.Tip="Current coordinate" Text="{Binding $parent[Window].DataContext.selectedDevice.axisB.currentCoordinate}" HorizontalAlignment="Center" />
-                        <StackPanel Spacing="10" Orientation="Horizontal">
+                                  <Button IsEnabled="False" Width="60" Height="40">
+                                    <material:MaterialIcon Width="40" Height="40" Kind="SkipNext" />
+                                  </Button>
+                                </StackPanel>
+                                <Panel Margin="0,5, 0, 5">
+                                  <Button HorizontalAlignment="Left" FontSize="22" Content="Move to" 
+                                           Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.moveTo}" 
+                                          CommandParameter="{Binding .}"></Button>
+                                  <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Spacing="3">
+                                    <NumericUpDown BorderThickness="0,0,0,2" Background="Transparent" HorizontalContentAlignment="Right" ShowButtonSpinner="False" Increment="1" FontSize="20" Height="35"   MinWidth="50" Value="{Binding target}" MaxWidth="150" Maximum="9999999" Minimum="-99999999"></NumericUpDown>
+                                    <Button Width="75" FontSize="22" Content="{Binding unitMeasureMoveTo}"
+                                             Command="{Binding ChangeUnitMeasureMoveTo}"></Button>
+                                  </StackPanel>
+                                </Panel>
+                                <Panel Margin="0,0, 0, 5">
+                                  <Button HorizontalAlignment="Left" FontSize="22" Content="Shift on" 
+                                           Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.shiftOn}" 
+                                          CommandParameter="{Binding .}"></Button>
+                                  <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Spacing="3">
+                                    <NumericUpDown BorderThickness="0,0,0,2" Background="Transparent" HorizontalContentAlignment="Right" ShowButtonSpinner="False" Increment="1" FontSize="20" Height="35"  MinWidth="50" Value="{Binding shift}" MaxWidth="150" Maximum="9999999" Minimum="-99999999"></NumericUpDown>
+                                    <Button Width="75" FontSize="22" Content="{Binding unitMeasureShiftOn}"
+                                             Command="{Binding ChangeUnitMeasureShiftOn}"></Button>
+                                  </StackPanel>
+                                </Panel>
+                              </StackPanel>
 
-                          <Button Width="60" Height="40">
-                            <material:MaterialIcon Width="40" Height="40" Kind="SkipPrevious" />
-                          </Button>
+                            </Panel>
+                          </SplitView>
+                        </Border>
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <UniformGrid Columns="1" Rows="2"/>
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
 
-                          <LayoutTransformControl>
-                            <LayoutTransformControl.LayoutTransform>
-                              <RotateTransform Angle="180"/>
-                            </LayoutTransformControl.LayoutTransform>
-                            <Button Width="60" Height="40" Command="{Binding $parent[Window].DataContext.selectedDevice.axisB_MoveBackward}">
-                              <material:MaterialIcon Width="40" Height="40"  Kind="Play"  />
-                            </Button>
-                          </LayoutTransformControl>
+                  </ItemsControl>
 
-                          <Button Width="60" Height="40" Command="{Binding $parent[Window].DataContext.selectedDevice.axisB_Stop}">
-                            <material:MaterialIcon Width="40" Height="40" Kind="Pause" />
-                          </Button>
-
-                          <Button Width="60" Height="40" Command="{Binding $parent[Window].DataContext.selectedDevice.axisB_MoveForward}">
-                            <material:MaterialIcon Width="40" Height="40" Kind="Play" />
-                          </Button>
-
-                          <Button Width="60" Height="40">
-                            <material:MaterialIcon Width="40" Height="40" Kind="SkipNext" />
-                          </Button>
-                        </StackPanel>
-                        <Panel Margin="0,5, 0, 5">
-                          <Button HorizontalAlignment="Left" FontSize="26" Content="Move to" ></Button>
-                          <NumericUpDown HorizontalAlignment="Right" Increment="1" FontSize="24" Value="0" ></NumericUpDown>
-                        </Panel>
-                        <Panel Margin="0,0, 0, 5">
-                          <Button HorizontalAlignment="Left" FontSize="26" Content="Shift on" ></Button>
-                          <NumericUpDown HorizontalAlignment="Right" Increment="1" FontSize="24" Value="0" ></NumericUpDown>
-                        </Panel>
-                      </StackPanel>
-                    </Panel>
-                  </SplitView>
-                  </Border>
+              
               </Grid>
                 
             </SplitView>
