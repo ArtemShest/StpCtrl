@@ -1,0 +1,37 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="StpCtrl.Views.SettingsWindow"
+        Title="SettingsWindow" 
+        Width="250" MinWidth="250"
+        Height="350" MinHeight="350"
+        TransparencyLevelHint="AcrylicBlur"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterOwner">
+  <Border BorderBrush="Black" BorderThickness="2">
+    <Panel>
+      <ExperimentalAcrylicBorder IsHitTestVisible="False">
+        <ExperimentalAcrylicBorder.Material>
+          <ExperimentalAcrylicMaterial
+              BackgroundSource="Digger"
+              TintColor="Black"
+              TintOpacity="1"
+              MaterialOpacity="0.65" />
+        </ExperimentalAcrylicBorder.Material>
+      </ExperimentalAcrylicBorder>
+      <Grid RowDefinitions="30, 30, *, 30">
+        <StackPanel Grid.Row="1" Orientation="Vertical" Spacing="10" HorizontalAlignment="Center">
+          <TextBlock FontSize="24"> Microstep mode:  </TextBlock>
+
+          <ComboBox Items="{Binding mslist}" SelectedItem="{Binding ms_mode}">
+
+          </ComboBox>
+          
+        </StackPanel>
+      </Grid>
+      <Button Content="Ok" Command="{Binding SettingsCommand}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+    </Panel>
+  </Border>
+</Window>

@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
 using System.Net;
-using System.Collections;
-using Avalonia.Controls;
 using System.IO;
-using StpCtrl.ViewModels;
-using System.Reactive;
-using Avalonia.Styling;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using ReactiveUI;
 using Avalonia.Collections;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace StpCtrl.Models
 {
@@ -90,10 +81,10 @@ namespace StpCtrl.Models
                     <html>
                         <head>
                             <meta charset='utf8'>
-                            <title>METANIT.COM</title>
+                            <title>stm32</title>
                         </head>
                         <body>
-                            <h2>Hello METANIT.COM</h2>
+                            <h2>Hello stm32</h2>
                         </body>
                     </html>";
                 byte[] buffer = Encoding.UTF8.GetBytes(responseText);

@@ -95,7 +95,7 @@ namespace StpCtrl.ViewModels
                         device.sendCommand(device.command, device.cmdAxis, device.cmdData);
                         device.command = null; device.cmdAxis = null; device.cmdData = null;
                     }
-                    Thread.Sleep(50);
+                    Thread.Sleep(100);
                 }
             });
             #pragma warning restore CS4014 // “ак как этот вызов не ожидаетс€, выполнение существующего метода продолжаетс€ до тех пор, пока вызов не будет завершен

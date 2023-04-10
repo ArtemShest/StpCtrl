@@ -18,11 +18,22 @@ namespace StpCtrl.Views
         {
             InitializeComponent();
             this.WhenActivated(d => d(ViewModel!.CycleDialog.RegisterHandler(ShowCycleDialog)));
+            this.WhenActivated(p => p(ViewModel!.SettingsDialog.RegisterHandler(SettingsDialogAsync)));
         }
 
         private async Task ShowCycleDialog(InteractionContext<CycleViewModel, Stepper> interaction)
         {
             Window dialog = new CycleWindow();
+
+            dialog.DataContext = interaction.Input;
+
+            var result = await dialog.ShowDialog<Stepper>(this);
+            interaction.SetOutput(result);
+        }
+
+        private async Task SettingsDialogAsync(InteractionContext<SettingsViewModel, Stepper> interaction)
+        {
+            Window dialog = new SettingsWindow();
 
             dialog.DataContext = interaction.Input;
 

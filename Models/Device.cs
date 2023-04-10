@@ -94,7 +94,7 @@ namespace StpCtrl.Models
         public ReactiveCommand<Stepper, Unit> cycle { get; }
         #endregion
 
-        //circle
+        
 
         #region methods
         public void _moveForward(Stepper step)
@@ -149,7 +149,7 @@ namespace StpCtrl.Models
 
         public void _cycle(Stepper step)
         {
-            if (step.commands != null || step.commands.Count != 0)
+            if (!(step.commands == null || step.commands.Count == 0))
             {
                 List<byte> list = new();
                 list.Add((byte)step.commands.Count);
@@ -161,6 +161,14 @@ namespace StpCtrl.Models
                 cmdData = list;
                 command = 4;
             }
+        }
+
+        public void changeMS(Stepper step)
+        {
+            List<byte> list = new() {(byte)step.msMode};
+            cmdAxis = (byte)axis.IndexOf(step);
+            cmdData = list;
+            command = 11;
         }
 
         public List<byte> intToListByte(int data)
@@ -187,63 +195,55 @@ namespace StpCtrl.Models
                 count1++;
                 Thread.Sleep(10);
             }
-            if (true)
+            
+            byte _axis = (byte)__axis; byte _cmd = (byte)__cmd;
+            List<byte> Fdata = new() { 0, 0, 0, 0, _cmd, _axis};
+            if (data != null) Fdata.AddRange(data);
+            TcpClient tcpClient = new TcpClient();
+            try
             {
-                byte _axis = (byte)__axis; byte _cmd = (byte)__cmd;
-                List<byte> Fdata = new() { 0, 0, 0, 0, _cmd, _axis};
-                if (data != null) Fdata.AddRange(data);
-                TcpClient tcpClient = new TcpClient();
-                try
+                    
+                byte[] requestData = new byte[Fdata.Count];
+                Fdata.CopyTo(requestData);
+
+                List<byte> msg = new();
+                tcpClient.Connect("192.168.1.15", 10);
+                NetworkStream stream = tcpClient.GetStream();
+                await stream.WriteAsync(requestData);
+                int count = 0;
+                while (!stream.DataAvailable)
                 {
-                    //Thread.Sleep(1000);
-                    //                    byte[] requestData = { 0, 0, 0, 0, _cmd, _axis, 0, 0, 0, 0 };
-                                        if (_cmd == 8)
-                    {
+                    if (count >= 50) break;
+                    count++;
+                    Thread.Sleep(10);
+                }
+                while (stream.DataAvailable)
+                {
+                    msg.Add(Convert.ToByte(stream.ReadByte()));
+                }
 
-                    }
-                    byte[] requestData = new byte[Fdata.Count];
-                    Fdata.CopyTo(requestData);
+                int curPositionA = msg[0];
+                for (int i = 1; i < 4; i++) { curPositionA = (curPositionA << 8) + msg[i]; }
+                axis[0].curPosition = curPositionA;
 
-                    List<byte> msg = new();
-//                    await tcpClient.ConnectAsync("192.168.1.15", 10);
-                    tcpClient.Connect("192.168.1.15", 10);
-                    NetworkStream stream = tcpClient.GetStream();
-                    await stream.WriteAsync(requestData);
-                    int count = 0;
-                    while (!stream.DataAvailable)
-                    {
-                        if (count >= 50) break;
-                        count++;
-                        Thread.Sleep(10);
-                    }
-                    while (stream.DataAvailable)
-                    {
-                        msg.Add(Convert.ToByte(stream.ReadByte()));
-                    }
+                int curPositionB = msg[4];
+                for (int i = 4; i < 8; i++) { curPositionB = (curPositionB << 8) + msg[i]; }
+                axis[1].curPosition = curPositionB;
 
-                    int curPositionA = msg[0];
-                    for (int i = 1; i < 4; i++) { curPositionA = (curPositionA << 8) + msg[i]; }
-                    axis[0].curPosition = curPositionA;
+                Int64 curPositionAmm = msg[8];
+                for (int i = 8; i < 16; i++) { curPositionAmm = (curPositionAmm << 8) + msg[i]; }
+                axis[0].curPositionMM = curPositionAmm;
 
-                    int curPositionB = msg[4];
-                    for (int i = 4; i < 8; i++) { curPositionB = (curPositionB << 8) + msg[i]; }
-                    axis[1].curPosition = curPositionB;
-
-                    Int64 curPositionAmm = msg[8];
-                    for (int i = 8; i < 16; i++) { curPositionAmm = (curPositionAmm << 8) + msg[i]; }
-                    axis[0].curPositionMM = curPositionAmm;
-
-                    Int64 curPositionBmm = msg[16];
-                    for (int i = 16; i < 24; i++) { curPositionBmm = (curPositionBmm << 8) + msg[i]; }
-                    axis[1].curPositionMM = curPositionBmm;
+                Int64 curPositionBmm = msg[16];
+                for (int i = 16; i < 24; i++) { curPositionBmm = (curPositionBmm << 8) + msg[i]; }
+                axis[1].curPositionMM = curPositionBmm;
                 
 
-                    tcpClient.Close();
-                }//
-                catch 
-                {
-                    if (tcpClient.Connected) tcpClient.Close();
-                }
+                tcpClient.Close();
+            }//
+            catch 
+            {
+                if (tcpClient.Connected) tcpClient.Close();
             }
             
         }

@@ -22,6 +22,8 @@ namespace StpCtrl.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        
+
         private HttpServer _server = new();
         public HttpServer server
         {
@@ -38,8 +40,6 @@ namespace StpCtrl.ViewModels
 
             openPanelLength = 120;
 
-//            server.Start(1234);
-
             stepper_tick();
 
             AvaloniaList<int> CircleCommands = new();
@@ -48,15 +48,43 @@ namespace StpCtrl.ViewModels
             {
                 var store = new CycleViewModel(stp);
                 var result = await CycleDialog.Handle(store);
-                if (result != null) result.cyclicToolTip = result.ChangeToolTip(result.commands);
+                if (result != null)
+                {
+                    stp.commands.Clear();
+                    for (int i = 0; i < result.commands.Count; i++)
+                    {
+                        Command comm = new(i + 1);
+                        comm.value = result.commands[i].value;
+                        stp.commands.Add((comm));
+                    }
+                    stp.cyclicToolTip = stp.ChangeToolTip(stp.commands);
+                    
+                }
                 return stp;
+            });
 
-
+            SettingsDialog = new Interaction<SettingsViewModel, Stepper>();
+            SettingsCommand = ReactiveCommand.CreateFromTask(async (Stepper? stp) =>
+            {
+                if (stp != null)
+                {
+                    var store = new SettingsViewModel(stp);
+                    var result = await SettingsDialog.Handle(store);
+                    if (result != null)
+                    {
+                        stp.msMode = result.msMode;
+                        selectedDevice.changeMS(stp);
+                    }
+                }
+                return stp;
             });
         }
 
         public ICommand CycleCommand { get; set; }
         public Interaction<CycleViewModel, Stepper> CycleDialog { get; }
+
+        public ICommand SettingsCommand { get; set; }
+        public Interaction<SettingsViewModel, Stepper> SettingsDialog { get; }
 
     }
 }

@@ -1,14 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 using Avalonia.Collections;
 using ReactiveUI;
 
 namespace StpCtrl.Models
 {
+    public enum MicrostepMode
+    {
+        @null = 0,
+        whole = 1,
+		half = 2,
+		quarter = 4,
+		eighth = 8,
+		sixteenth = 16
+    }
     public class Stepper : ReactiveObject
     {
         #region values
@@ -24,6 +28,7 @@ namespace StpCtrl.Models
         private string _unitMeasureMoveTo = "steps";
         private AvaloniaList<Command>? _commands;
         private string _cyclicToolTip;
+        private MicrostepMode _msMode; 
         #endregion
 
         #region properties
@@ -99,17 +104,19 @@ namespace StpCtrl.Models
         public AvaloniaList<Command>? commands
         {
             get => _commands;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _commands, value);
-                
-            }
+            set => this.RaiseAndSetIfChanged(ref _commands, value); 
         }
 
         public string cyclicToolTip
         {
             get => _cyclicToolTip;
             set => this.RaiseAndSetIfChanged(ref _cyclicToolTip, value);
+        }
+
+        public MicrostepMode msMode
+        {
+            get => _msMode;
+            set => this.RaiseAndSetIfChanged(ref _msMode, value);
         }
 
 
@@ -122,6 +129,8 @@ namespace StpCtrl.Models
             this.curPosition = 0;
             this.isPanelOpen = false;
             this.commands = new();
+            cyclicToolTip = ChangeToolTip(null);
+            msMode = MicrostepMode.sixteenth;
         }
 
 
@@ -143,7 +152,7 @@ namespace StpCtrl.Models
             else if (unitMeasureMoveTo == "mkm") unitMeasureMoveTo = "steps";
         }
 
-        public string ChangeToolTip(AvaloniaList<Command> cmds)
+        public string ChangeToolTip(AvaloniaList<Command>? cmds)
         {
             if (cmds == null || cmds.Count == 0)
                 return "Set commands";
@@ -152,7 +161,8 @@ namespace StpCtrl.Models
                 string str = "";
                 for(int i = 0; i< cmds.Count; i++) 
                 {
-                    str += cmds[i].index + ". " + cmds[i].value + "\n";
+                    str += cmds[i].index + ". " + cmds[i].value;
+                    if (i != cmds.Count - 1) str += "\n";
                 }
                 return str;
             }
@@ -163,7 +173,7 @@ namespace StpCtrl.Models
 
     public class Command : ReactiveObject
     {
-            private int _index;
+        private int _index;
         public int index
         {
             get => _index;

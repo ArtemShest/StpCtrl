@@ -145,7 +145,9 @@
                                     <material:MaterialIcon Width="30" Height="30" Kind="Pencil" />
                                   </Button>
                                 </StackPanel>
-                                <Button IsEnabled="False" Width="110" HorizontalAlignment="Center"> Settings </Button>
+                                <Button Width="110" HorizontalAlignment="Center" IsEnabled="False"
+                                        Command="{Binding  $parent[Window].DataContext.SettingsCommand}"
+                                        CommandParameter="{Binding .}"  > Settings </Button>
                                 <Border Width="110" CornerRadius="3" BorderThickness="2" BorderBrush="Black" Background="DarkGray">
                                   <Panel Height="30">
                                     <TextBlock Margin="6, 3, 3, 3" Text="Steps" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
@@ -186,7 +188,11 @@
                                   <TextBlock FontSize="38" ToolTip.Tip="Current coordinate" Text="{Binding curPosition}" HorizontalAlignment="Center" />
                                   <TextBlock  FontSize="38" Text=" steps"/>
                                 </StackPanel>
-                                  <Grid ColumnDefinitions="*, *, *" IsVisible="{Binding isShowCurrentMM}">
+                                <StackPanel IsVisible="{Binding isShowCurrentMM}" Orientation="Horizontal" HorizontalAlignment="Center">
+                                  <TextBlock FontSize="32" ToolTip.Tip="Current coordinate" Text="{Binding curPositionMM, Converter={valueConverter:PositionMMConverter}, Mode=OneWay, ConverterParameter=fullmm}" HorizontalAlignment="Center" />
+                                  <TextBlock VerticalAlignment="Bottom" FontSize="24" Text=" mm "/>
+                                </StackPanel>
+                                <!--      <Grid ColumnDefinitions="*, *, *" IsVisible="{Binding isShowCurrentMM}">
                                     <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
                                       <TextBlock FontSize="32" ToolTip.Tip="Current coordinate" Text="{Binding curPositionMM, Converter={valueConverter:PositionMMConverter}, Mode=OneWay, ConverterParameter=mm}" HorizontalAlignment="Center" />
                                       <TextBlock VerticalAlignment="Bottom" FontSize="18" Text=" mm "/>
@@ -199,39 +205,32 @@
                                       <TextBlock FontSize="32" ToolTip.Tip="Current coordinate" Text="{Binding curPositionMM, Converter={valueConverter:PositionMMConverter}, Mode=OneWay, ConverterParameter=nm}" HorizontalAlignment="Center" />
                                       <TextBlock VerticalAlignment="Bottom" FontSize="18" Text=" nm "/>
                                     </StackPanel>
-                                  </Grid>
-                                <StackPanel Spacing="10" Orientation="Horizontal">
-
-                                  <Button IsEnabled="False" Width="60" Height="40">
-                                    <material:MaterialIcon Width="40" Height="40" Kind="SkipPrevious" />
-                                  </Button>
-
-                                  <LayoutTransformControl>
+                                  </Grid> -->
+                                  <StackPanel Spacing="10" Orientation="Horizontal">
+                                   <LayoutTransformControl>
                                     <LayoutTransformControl.LayoutTransform>
                                       <RotateTransform Angle="180"/>
                                     </LayoutTransformControl.LayoutTransform>
-                                    <Button  Width="60" Height="40" 
+                                    <Button  Width="100" Height="70" 
                                             Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.moveBackward}" 
                                             CommandParameter="{Binding .}">
-                                      <material:MaterialIcon Width="40" Height="40"  Kind="Play"  />
+                                      <material:MaterialIcon Width="60" Height="60"  Kind="Play"  />
                                     </Button>
                                   </LayoutTransformControl>
 
-                                  <Button Width="60" Height="40" 
+                                  <Button Width="100" Height="70"
                                           Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.stop}" 
                                           CommandParameter="{Binding .}">
-                                    <material:MaterialIcon Width="40" Height="40" Kind="Pause" />
+                                    <material:MaterialIcon Width="60" Height="60" Kind="Pause" />
                                   </Button>
 
-                                  <Button Width="60" Height="40" 
+                                  <Button Width="100" Height="70"
                                           Command="{Binding $parent[ItemsControl].DataContext.selectedDevice.moveForward}" 
                                           CommandParameter="{Binding .}">
-                                    <material:MaterialIcon Width="40" Height="40" Kind="Play" />
+                                    <material:MaterialIcon Width="60" Height="60" Kind="Play" />
                                   </Button>
 
-                                  <Button IsEnabled="False" Width="60" Height="40">
-                                    <material:MaterialIcon Width="40" Height="40" Kind="SkipNext" />
-                                  </Button>
+                                 
                                 </StackPanel>
                                 <Panel Margin="0,5, 0, 5">
                                   <Button HorizontalAlignment="Left" FontSize="22" Content="Move to" 

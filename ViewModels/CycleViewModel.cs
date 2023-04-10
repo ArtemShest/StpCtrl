@@ -30,12 +30,20 @@ namespace StpCtrl.ViewModels
 
         public CycleViewModel(Stepper stp)
         {
-            stepper = stp;
+
+            stepper = new("");
+
+            for(int i = 0; i < stp.commands.Count; i++)
+            {
+                Command comm = new(i+1);
+                comm.value = stp.commands[i].value;
+                stepper.commands.Add((comm));
+            }
 
             CycleCommand = ReactiveCommand.Create(() =>
             {
 
-                return stp;
+                return stepper;
             });
         }
 
@@ -43,7 +51,8 @@ namespace StpCtrl.ViewModels
 
         public void AddCommand()
         {
-            if (stepper != null && stepper.commands == null) stepper.commands = new();
+            if (stepper != null && stepper.commands == null) 
+                stepper.commands = new();
             stepper?.commands?.Add(new Command(stepper.commands.Count+1));
         }
 
