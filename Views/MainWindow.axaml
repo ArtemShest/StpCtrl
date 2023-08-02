@@ -101,9 +101,6 @@
             <SplitView.Pane>
             </SplitView.Pane>
                 <Grid ColumnDefinitions="*" >
-                  <!--  <Grid ColumnDefinitions="*, 150" > -->
-                  <!--    <TextBox Width="150" Grid.Column="1" Text="{Binding $parent[Window].DataContext.server.log}" /> -->
-
                   <ItemsControl Items="{Binding selectedDevice.axis}">
                     <ItemsControl.ItemTemplate>
                       <DataTemplate>
@@ -192,20 +189,7 @@
                                   <TextBlock FontSize="32" ToolTip.Tip="Current coordinate" Text="{Binding curPositionMM, Converter={valueConverter:PositionMMConverter}, Mode=OneWay, ConverterParameter=fullmm}" HorizontalAlignment="Center" />
                                   <TextBlock VerticalAlignment="Bottom" FontSize="24" Text=" mm "/>
                                 </StackPanel>
-                                <!--      <Grid ColumnDefinitions="*, *, *" IsVisible="{Binding isShowCurrentMM}">
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                                      <TextBlock FontSize="32" ToolTip.Tip="Current coordinate" Text="{Binding curPositionMM, Converter={valueConverter:PositionMMConverter}, Mode=OneWay, ConverterParameter=mm}" HorizontalAlignment="Center" />
-                                      <TextBlock VerticalAlignment="Bottom" FontSize="18" Text=" mm "/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                      <TextBlock FontSize="32" ToolTip.Tip="Current coordinate" Text="{Binding curPositionMM, Converter={valueConverter:PositionMMConverter}, Mode=OneWay, ConverterParameter=mkm}" HorizontalAlignment="Center" />
-                                      <TextBlock VerticalAlignment="Bottom" FontSize="18" Text=" mkm "/>
-                                    </StackPanel>
-                                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                                      <TextBlock FontSize="32" ToolTip.Tip="Current coordinate" Text="{Binding curPositionMM, Converter={valueConverter:PositionMMConverter}, Mode=OneWay, ConverterParameter=nm}" HorizontalAlignment="Center" />
-                                      <TextBlock VerticalAlignment="Bottom" FontSize="18" Text=" nm "/>
-                                    </StackPanel>
-                                  </Grid> -->
+                                
                                   <StackPanel Spacing="10" Orientation="Horizontal">
                                    <LayoutTransformControl>
                                     <LayoutTransformControl.LayoutTransform>
